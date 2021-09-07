@@ -1,0 +1,59 @@
+//plugins {
+//    id 'com.android.application'
+//}
+apply plugin: 'com.android.application'
+//添加greendao相关的plugin
+apply plugin: 'org.greenrobot.greendao'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.lxh.coolweather"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    greendao {
+        // 数据库版本号
+        schemaVersion 1
+        // 生成数据库文件的目录
+        targetGenDir 'src/main/java'
+        // 生成的数据库相关文件的包名
+        daoPackage 'com.lxh.coolweather.db.gen'
+    }
+}
+
+dependencies {
+    //okhttp
+    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.6'
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    //greendao
+    implementation 'org.greenrobot:greendao:3.3.0'
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
