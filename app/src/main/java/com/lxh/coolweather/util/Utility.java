@@ -2,9 +2,11 @@ package com.lxh.coolweather.util;
 
 import android.text.TextUtils;
 
+import com.lxh.coolweather.MyApplication;
 import com.lxh.coolweather.db.entity.City;
 import com.lxh.coolweather.db.entity.County;
 import com.lxh.coolweather.db.entity.Province;
+import com.lxh.coolweather.db.gen.DaoSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +24,7 @@ public class Utility {
                     province.setProvinceName(provinceObject.getString("name"));
                     province.setProvinceCode(provinceObject.getInt("id"));
                     //插入数据库
+                    
 
                 }
                 return true;
