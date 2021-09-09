@@ -3,6 +3,7 @@ package com.lxh.coolweather.db.util;
 import android.database.Cursor;
 
 import com.lxh.coolweather.db.entity.Province;
+import com.lxh.coolweather.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -15,8 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.lxh.coolweather.db.entity.City;
 import com.lxh.coolweather.db.entity.County;
@@ -31,7 +29,7 @@ import com.lxh.coolweather.util.Utility;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
+
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -136,9 +134,10 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCities() {
         tv_title.setText(selectedProvince.getProvinceName());
         btn_back.setVisibility(View.GONE);
+        int provinceCode = selectedProvince.getProvinceCode();
         //从数据库查询
-        String sql = "SELECT * FROM CITY";
-        cityList = cityDaoUtil.findAllCities(sql,null);
+        String sql = "SELECT * FROM CITY WHERE PROVINCE_ID = ?";
+        cityList = cityDaoUtil.findAllCities(sql,new String[]{String.valueOf(provinceCode)});
         if (cityList.size() > 0) {
             dataList.clear();
             for (City city : cityList) {
@@ -148,8 +147,7 @@ public class ChooseAreaFragment extends Fragment {
             listView.setSelection(0);
             currentLevel = LEVEL_CITY;
         } else {
-            int provinceCode = selectedProvince.getProvinceCode();
-            String address = "http://guolin.tech/api/china" + provinceCode;
+            String address = "http://guolin.tech/api/china/" + provinceCode;
             //从服务器查询
             queryFromServer(address,"city");
 
@@ -160,9 +158,11 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCounties() {
         tv_title.setText(selectedCity.getCityName());
         btn_back.setVisibility(View.GONE);
+        int provinceCode = selectedProvince.getProvinceCode();
+        int cityCode = selectedCity.getCityCode();
         //从数据库查询
-        String sql = "SELECT * FROM COUNTY";
-        countyList = countyDaoUtil.findAllCounties(sql,null);
+        String sql = "SELECT * FROM COUNTY WHERE CITY_ID = ?";
+        countyList = countyDaoUtil.findAllCounties(sql,new String[]{String.valueOf(cityCode)});
         if (countyList.size() > 0) {
             dataList.clear();
             for (County county : countyList) {
@@ -172,9 +172,7 @@ public class ChooseAreaFragment extends Fragment {
             listView.setSelection(0);
             currentLevel = LEVEL_COUNTY;
         } else {
-            int provinceCode = selectedProvince.getProvinceCode();
-            int cityCode = selectedCity.getCityCode();
-            String address = "http://guolin.tech/api/china" + provinceCode + "/" + cityCode;
+            String address = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
             //从服务器查询
             queryFromServer(address,"county");
 
