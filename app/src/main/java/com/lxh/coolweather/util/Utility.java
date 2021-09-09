@@ -1,18 +1,21 @@
 package com.lxh.coolweather.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.lxh.coolweather.MyApplication;
 import com.lxh.coolweather.db.entity.City;
 import com.lxh.coolweather.db.entity.County;
 import com.lxh.coolweather.db.entity.Province;
-import com.lxh.coolweather.db.gen.DaoSession;
+import com.lxh.coolweather.db.util.BaseUtil;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Utility {
+
+    private static BaseUtil baseUtil = new BaseUtil();
     //处理省级返回数据
     public static boolean handleProvinceResponse(String response){
         if (!TextUtils.isEmpty(response)){
@@ -23,9 +26,9 @@ public class Utility {
                     Province province = new Province();
                     province.setProvinceName(provinceObject.getString("name"));
                     province.setProvinceCode(provinceObject.getInt("id"));
+                    Log.e("====",province.getProvinceName());
                     //插入数据库
-                    
-
+                    baseUtil.addEntity(province);
                 }
                 return true;
             } catch (JSONException e) {
@@ -36,7 +39,7 @@ public class Utility {
     }
 
     //处理市级返回数据
-    public static boolean handleCityResponse(String response,int provinceId){
+    public static boolean handleCityResponse(String response,long provinceId){
         if (!TextUtils.isEmpty(response)){
             try{
                 JSONArray allCities = new JSONArray(response);
@@ -47,7 +50,7 @@ public class Utility {
                     city.setCityCode(cityObject.getInt("id"));
                     city.setProvinceId(provinceId);
                     //插入数据库
-
+                    baseUtil.addEntity(city);
                 }
                 return true;
             } catch (JSONException e) {
@@ -58,7 +61,7 @@ public class Utility {
     }
 
     //处理县级返回数据
-    public static boolean handleCountyResponse(String response,int cityId){
+    public static boolean handleCountyResponse(String response,long cityId){
         if (!TextUtils.isEmpty(response)){
             try{
                 JSONArray allCounties = new JSONArray(response);
@@ -69,7 +72,7 @@ public class Utility {
                     county.setWeatherId(countyObject.getString("weather_id"));
                     county.setCityId(cityId);
                     //插入数据库
-
+                    baseUtil.addEntity(county);
                 }
                 return true;
             } catch (JSONException e) {

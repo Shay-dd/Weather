@@ -15,7 +15,7 @@ import com.lxh.coolweather.db.entity.Province;
 /** 
  * DAO for table "PROVINCE".
 */
-public class ProvinceDao extends AbstractDao<Province, Integer> {
+public class ProvinceDao extends AbstractDao<Province, Long> {
 
     public static final String TABLENAME = "PROVINCE";
 
@@ -24,7 +24,7 @@ public class ProvinceDao extends AbstractDao<Province, Integer> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, int.class, "id", true, "ID");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property ProvinceName = new Property(1, String.class, "provinceName", false, "PROVINCE_NAME");
         public final static Property ProvinceCode = new Property(2, int.class, "provinceCode", false, "PROVINCE_CODE");
     }
@@ -42,7 +42,7 @@ public class ProvinceDao extends AbstractDao<Province, Integer> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"PROVINCE\" (" + //
-                "\"ID\" INTEGER PRIMARY KEY NOT NULL ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"PROVINCE_NAME\" TEXT," + // 1: provinceName
                 "\"PROVINCE_CODE\" INTEGER NOT NULL );"); // 2: provinceCode
     }
@@ -56,7 +56,11 @@ public class ProvinceDao extends AbstractDao<Province, Integer> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Province entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         String provinceName = entity.getProvinceName();
         if (provinceName != null) {
@@ -68,7 +72,11 @@ public class ProvinceDao extends AbstractDao<Province, Integer> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, Province entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         String provinceName = entity.getProvinceName();
         if (provinceName != null) {
@@ -78,14 +86,14 @@ public class ProvinceDao extends AbstractDao<Province, Integer> {
     }
 
     @Override
-    public Integer readKey(Cursor cursor, int offset) {
-        return cursor.getInt(offset + 0);
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public Province readEntity(Cursor cursor, int offset) {
         Province entity = new Province( //
-            cursor.getInt(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // provinceName
             cursor.getInt(offset + 2) // provinceCode
         );
@@ -94,18 +102,19 @@ public class ProvinceDao extends AbstractDao<Province, Integer> {
      
     @Override
     public void readEntity(Cursor cursor, Province entity, int offset) {
-        entity.setId(cursor.getInt(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setProvinceName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setProvinceCode(cursor.getInt(offset + 2));
      }
     
     @Override
-    protected final Integer updateKeyAfterInsert(Province entity, long rowId) {
-        return entity.getId();
+    protected final Long updateKeyAfterInsert(Province entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Integer getKey(Province entity) {
+    public Long getKey(Province entity) {
         if(entity != null) {
             return entity.getId();
         } else {
@@ -115,7 +124,7 @@ public class ProvinceDao extends AbstractDao<Province, Integer> {
 
     @Override
     public boolean hasKey(Province entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.getId() != null;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class DaoManager {
     //创建数据库
     public DaoMaster getDaoMaster(){
         if (mDaoMaster == null){
-            DaoMaster.DevOpenHelper devOpenHelper= new DaoMaster.DevOpenHelper(myApplication,DB_NAME);
+            DaoMaster.DevOpenHelper devOpenHelper= new DaoMaster.DevOpenHelper(MyApplication.getContext(), DB_NAME);
             SQLiteDatabase db = devOpenHelper.getWritableDatabase();
             mDaoMaster = new DaoMaster(db);
         }

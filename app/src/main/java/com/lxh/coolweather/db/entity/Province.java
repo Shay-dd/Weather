@@ -7,11 +7,11 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class Province {
     @Id
-    private int id;
+    private Long id;
     private String provinceName;
     private int provinceCode;
-    @Generated(hash = 87637210)
-    public Province(int id, String provinceName, int provinceCode) {
+    @Generated(hash = 1695957187)
+    public Province(Long id, String provinceName, int provinceCode) {
         this.id = id;
         this.provinceName = provinceName;
         this.provinceCode = provinceCode;
@@ -19,10 +19,10 @@ public class Province {
     @Generated(hash = 1309009906)
     public Province() {
     }
-    public int getId() {
+    public Long getId() {
         return this.id;
     }
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getProvinceName() {
@@ -37,4 +37,5 @@ public class Province {
     public void setProvinceCode(int provinceCode) {
         this.provinceCode = provinceCode;
     }
+
 }

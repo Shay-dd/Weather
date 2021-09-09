@@ -21,7 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.lxh.coolweather.db.entity.City;
 import com.lxh.coolweather.db.entity.County;
 import com.lxh.coolweather.db.entity.Province;
+import com.lxh.coolweather.db.util.CityDaoUtil;
+import com.lxh.coolweather.db.util.CountyDaoUtil;
+import com.lxh.coolweather.db.util.ProvinceDaoUtil;
 import com.lxh.coolweather.util.HttpUtil;
+import com.lxh.coolweather.util.LogUtil;
 import com.lxh.coolweather.util.Utility;
 
 import java.io.IOException;
@@ -55,6 +59,10 @@ public class ChooseAreaFragment extends Fragment {
     private City selectedCity;
     //当前选中的级别
     private int currentLevel;
+
+    private ProvinceDaoUtil provinceDaoUtil = new ProvinceDaoUtil();
+    private CityDaoUtil cityDaoUtil = new CityDaoUtil();
+    private CountyDaoUtil countyDaoUtil = new CountyDaoUtil();
 
 
     @Override
@@ -106,7 +114,8 @@ public class ChooseAreaFragment extends Fragment {
         tv_title.setText("中国");
         btn_back.setVisibility(View.GONE);
         //从数据库查询
-//        provinceList =
+        String sql = "SELECT * FROM PROVINCE";
+        provinceList = provinceDaoUtil.findAllProvinces(sql,null);
         if (provinceList.size() > 0) {
             dataList.clear();
             for (Province province : provinceList) {
@@ -128,7 +137,8 @@ public class ChooseAreaFragment extends Fragment {
         tv_title.setText(selectedProvince.getProvinceName());
         btn_back.setVisibility(View.GONE);
         //从数据库查询
-//        provinceList =
+        String sql = "SELECT * FROM CITY";
+        cityList = cityDaoUtil.findAllCities(sql,null);
         if (cityList.size() > 0) {
             dataList.clear();
             for (City city : cityList) {
@@ -151,7 +161,8 @@ public class ChooseAreaFragment extends Fragment {
         tv_title.setText(selectedCity.getCityName());
         btn_back.setVisibility(View.GONE);
         //从数据库查询
-//        provinceList =
+        String sql = "SELECT * FROM COUNTY";
+        countyList = countyDaoUtil.findAllCounties(sql,null);
         if (countyList.size() > 0) {
             dataList.clear();
             for (County county : countyList) {
@@ -180,6 +191,7 @@ public class ChooseAreaFragment extends Fragment {
                 boolean result = false;
                 if ("province".equals(type)) {
                     result = Utility.handleProvinceResponse(responseData);
+                    LogUtil.e("result2",String.valueOf(result));
                 } else if ("city".equals(type)) {
                     result = Utility.handleCityResponse(responseData, selectedProvince.getId());
                 } else if ("county".equals(type)) {
