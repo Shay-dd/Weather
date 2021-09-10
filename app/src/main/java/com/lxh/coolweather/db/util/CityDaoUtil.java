@@ -21,6 +21,7 @@ public class CityDaoUtil extends BaseUtil {
                 city.setCityName(cursor.getString(1));
                 city.setCityCode(cursor.getInt(2));
                 city.setProvinceId(cursor.getLong(3));
+                LogUtil.e("City",city.getCityName());
                 citiesList.add(city);
             }
         }

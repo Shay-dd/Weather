@@ -1,6 +1,7 @@
 package com.lxh.coolweather;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,6 +91,12 @@ public class ChooseAreaFragment extends Fragment {
                     selectedCity = cityList.get(position);
                     //查询县
                     queryCounties();
+                } else if (currentLevel == LEVEL_COUNTY) {
+                    String weatherId = countyList.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id", weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -113,7 +120,7 @@ public class ChooseAreaFragment extends Fragment {
         btn_back.setVisibility(View.GONE);
         //从数据库查询
         String sql = "SELECT * FROM PROVINCE";
-        provinceList = provinceDaoUtil.findAllProvinces(sql,null);
+        provinceList = provinceDaoUtil.findAllProvinces(sql, null);
         if (provinceList.size() > 0) {
             dataList.clear();
             for (Province province : provinceList) {
@@ -125,7 +132,7 @@ public class ChooseAreaFragment extends Fragment {
         } else {
             String address = "http://guolin.tech/api/china";
             //从服务器查询
-            queryFromServer(address,"province");
+            queryFromServer(address, "province");
 
         }
     }
@@ -137,7 +144,7 @@ public class ChooseAreaFragment extends Fragment {
         int provinceCode = selectedProvince.getProvinceCode();
         //从数据库查询
         String sql = "SELECT * FROM CITY WHERE PROVINCE_ID = ?";
-        cityList = cityDaoUtil.findAllCities(sql,new String[]{String.valueOf(provinceCode)});
+        cityList = cityDaoUtil.findAllCities(sql, new String[]{String.valueOf(provinceCode)});
         if (cityList.size() > 0) {
             dataList.clear();
             for (City city : cityList) {
@@ -149,7 +156,7 @@ public class ChooseAreaFragment extends Fragment {
         } else {
             String address = "http://guolin.tech/api/china/" + provinceCode;
             //从服务器查询
-            queryFromServer(address,"city");
+            queryFromServer(address, "city");
 
         }
     }
@@ -162,7 +169,7 @@ public class ChooseAreaFragment extends Fragment {
         int cityCode = selectedCity.getCityCode();
         //从数据库查询
         String sql = "SELECT * FROM COUNTY WHERE CITY_ID = ?";
-        countyList = countyDaoUtil.findAllCounties(sql,new String[]{String.valueOf(cityCode)});
+        countyList = countyDaoUtil.findAllCounties(sql, new String[]{String.valueOf(cityCode)});
         if (countyList.size() > 0) {
             dataList.clear();
             for (County county : countyList) {
@@ -174,7 +181,7 @@ public class ChooseAreaFragment extends Fragment {
         } else {
             String address = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
             //从服务器查询
-            queryFromServer(address,"county");
+            queryFromServer(address, "county");
 
         }
     }
@@ -189,7 +196,7 @@ public class ChooseAreaFragment extends Fragment {
                 boolean result = false;
                 if ("province".equals(type)) {
                     result = Utility.handleProvinceResponse(responseData);
-                    LogUtil.e("result2",String.valueOf(result));
+                    LogUtil.e("result2", String.valueOf(result));
                 } else if ("city".equals(type)) {
                     result = Utility.handleCityResponse(responseData, selectedProvince.getId());
                 } else if ("county".equals(type)) {

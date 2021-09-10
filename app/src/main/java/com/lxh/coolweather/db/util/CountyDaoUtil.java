@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import com.lxh.coolweather.db.entity.City;
 import com.lxh.coolweather.db.entity.County;
+import com.lxh.coolweather.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class CountyDaoUtil extends BaseUtil {
                 county.setCountyName(cursor.getString(1));
                 county.setWeatherId(cursor.getString(2));
                 county.setCityId(cursor.getLong(3));
+                LogUtil.e("County",county.getCountyName());
                 countiesList.add(county);
             }
         }
